@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,15 +12,16 @@ import (
 	"strings"
 )
 
-// for Mac, make platform dependant later
-var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch", "userData.json")
-
 type userData struct {
-	AcessBearer  string
-	RefreshToken string
+	AcessBearer  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 	UserID       string
 	PlaylistID   string
 }
+
+// for Mac, make platform dependant later
+var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch", "userData.json")
+var user userData
 
 func main() {
 	userRaw, err := ioutil.ReadFile(db)
@@ -73,6 +75,7 @@ func exchangeCode(code string) bool {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	check(err)
 
-	fmt.Println(string(bodyBytes))
+	err = json.Unmarshal(bodyBytes, &user)
+	check(err)
 	return true
 }
