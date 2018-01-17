@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 )
 
 // for Mac, make platform dependant later
@@ -26,8 +27,8 @@ func main() {
 		initialize()
 	} else {
 		check(err)
+		fmt.Println(userRaw)
 	}
-	fmt.Println(userRaw)
 }
 
 func check(err error) {
@@ -53,8 +54,25 @@ func serve(done chan bool) {
 	http.HandleFunc("/catch", func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Thank you, GoSnatch can now access your spotify account.\nYou may close this window.\n")
 		code := r.URL.Query()["code"][0]
-		fmt.Println(code)
-		done <- true
+		ok := exchangeCode(code)
+		done <- ok
 	})
 	http.ListenAndServe(":3456", nil)
+}
+
+func exchangeCode(code string) bool {
+	body := strings.NewReader("grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:3456/catch")
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", body)
+	check(err)
+	req.Header.Set("Authorization", "Basic NzE1YzE1ZmM3NTAzNDAxZmIxMzZkNmE3OTA3OWI1MGM6ZTkxZWZkZDAzNDVkNDlkNTllOGE2ZDc1YjUzZTE2YTE=")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := http.DefaultClient.Do(req)
+	check(err)
+	defer resp.Body.Close()
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	check(err)
+
+	fmt.Println(string(bodyBytes))
+	return true
 }
