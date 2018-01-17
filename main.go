@@ -6,9 +6,9 @@ import (
 	"path"
 )
 
-var db string
+// for Mac, make platform dependant later
+var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch")
 
 func main() {
-	db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch")
 	fmt.Println(db)
 }
