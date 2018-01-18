@@ -25,7 +25,7 @@ func main() {
 		initialize()
 	} else {
 		check(err)
+		err = json.Unmarshal(userRaw, &user)
+		check(err)
 	}
-	err = json.Unmarshal(userRaw, &user)
-	check(err)
 }
