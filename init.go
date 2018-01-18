@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os/exec"
 	"strings"
@@ -34,25 +32,18 @@ func serve(done chan bool) {
 	http.ListenAndServe(":3456", nil)
 }
 
-func getToken(body *strings.Reader) {
-	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", body)
-	check(err)
-	req.Header.Set("Authorization", "Basic NzE1YzE1ZmM3NTAzNDAxZmIxMzZkNmE3OTA3OWI1MGM6ZTkxZWZkZDAzNDVkNDlkNTllOGE2ZDc1YjUzZTE2YTE=")
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+func getPlaylist() {
+	list := get("me/playlists")
+	items := list["items"].([]interface{})
 
-	resp, err := http.DefaultClient.Do(req)
-	check(err)
-	defer resp.Body.Close()
-
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	check(err)
-
-	err = json.Unmarshal(bodyBytes, &user)
-	check(err)
-
-	userJSON, err := json.Marshal(user)
-	check(err)
-
-	err = ioutil.WriteFile(db, userJSON, 0600)
-	check(err)
+	for _, v := range items {
+		cell := v.(map[string]interface{})
+		if cell["name"] == "GoSnatch" {
+			user.PlaylistID = cell["id"].(string)
+			owner := cell["owner"].(map[string]interface{})
+			user.UserID = owner["id"].(string)
+			return
+		}
+	}
+	fmt.Println("TODO: create playlist")
 }
