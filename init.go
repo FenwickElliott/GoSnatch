@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os/exec"
 	"strings"
@@ -45,5 +47,27 @@ func getPlaylist() {
 			return
 		}
 	}
-	fmt.Println("TODO: create playlist")
+	createPlaylist()
+}
+
+func createPlaylist() {
+	user.UserID = get("me")["id"].(string)
+
+	url := "https://api.spotify.com/v1/users/" + user.UserID + "/playlists"
+	body := strings.NewReader(`{"name":"GoSnatch","description":"Your automatically generated GoSnatch playlist!","public":"false"}`)
+
+	req, err := http.NewRequest("POST", url, body)
+	check(err)
+	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	check(err)
+	defer resp.Body.Close()
+
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	map2b := make(map[string]interface{})
+	err = json.Unmarshal(bodyBytes, &map2b)
+	check(err)
+	user.PlaylistID = map2b["id"].(string)
 }
