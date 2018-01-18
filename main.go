@@ -20,6 +20,7 @@ type userData struct {
 }
 
 // for Mac, make platform dependant later
+// add functionality for creating GoSnatch directory if not presant
 var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch", "userData.json")
 var user userData
 
@@ -46,7 +47,6 @@ func initialize() {
 	exec.Command("open", "https://accounts.spotify.com/authorize/?client_id=715c15fc7503401fb136d6a79079b50c&response_type=code&redirect_uri=http://localhost:3456/catch&scope=user-read-playback-state%20playlist-read-private%20playlist-modify-private").Start()
 
 	finished := <-done
-
 	if finished {
 		fmt.Println("Initiation complete")
 	}
@@ -76,6 +76,12 @@ func exchangeCode(code string) bool {
 	check(err)
 
 	err = json.Unmarshal(bodyBytes, &user)
+	check(err)
+
+	userJSON, err := json.Marshal(user)
+	check(err)
+
+	err = ioutil.WriteFile("local", userJSON, 0600)
 	check(err)
 	return true
 }
