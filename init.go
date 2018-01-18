@@ -34,56 +34,7 @@ func serve(done chan bool) {
 	http.ListenAndServe(":3456", nil)
 }
 
-// func exchangeCode(code string) bool {
-// 	fmt.Println("exchangeing")
-// 	body := strings.NewReader("grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:3456/catch")
-// 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", body)
-// 	check(err)
-// 	req.Header.Set("Authorization", "Basic NzE1YzE1ZmM3NTAzNDAxZmIxMzZkNmE3OTA3OWI1MGM6ZTkxZWZkZDAzNDVkNDlkNTllOGE2ZDc1YjUzZTE2YTE=")
-// 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-// 	resp, err := http.DefaultClient.Do(req)
-// 	check(err)
-// 	defer resp.Body.Close()
-
-// 	bodyBytes, err := ioutil.ReadAll(resp.Body)
-// 	check(err)
-
-// 	err = json.Unmarshal(bodyBytes, &user)
-// 	check(err)
-
-// 	// userJSON, err := json.Marshal(user)
-// 	// check(err)
-
-// 	// err = ioutil.WriteFile(db, userJSON, 0600)
-// 	// check(err)
-// 	return true
-// }
-
-// func refresh() {
-// 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader("grant_type=refresh_token&refresh_token="+user.RefreshToken))
-// 	check(err)
-// 	req.Header.Set("Authorization", "Basic NzE1YzE1ZmM3NTAzNDAxZmIxMzZkNmE3OTA3OWI1MGM6ZTkxZWZkZDAzNDVkNDlkNTllOGE2ZDc1YjUzZTE2YTE=")
-// 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-// 	resp, err := http.DefaultClient.Do(req)
-// 	check(err)
-// 	defer resp.Body.Close()
-
-// 	bodyBytes, err := ioutil.ReadAll(resp.Body)
-// 	check(err)
-
-// 	err = json.Unmarshal(bodyBytes, &user)
-// 	check(err)
-
-// 	// userJSON, err := json.Marshal(user)
-// 	// check(err)
-
-// 	// err = ioutil.WriteFile(db, userJSON, 0600)
-// 	// check(err)
-// }
-
 func getToken(body *strings.Reader) {
-	fmt.Println("getting")
 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", body)
 	check(err)
 	req.Header.Set("Authorization", "Basic NzE1YzE1ZmM3NTAzNDAxZmIxMzZkNmE3OTA3OWI1MGM6ZTkxZWZkZDAzNDVkNDlkNTllOGE2ZDc1YjUzZTE2YTE=")
