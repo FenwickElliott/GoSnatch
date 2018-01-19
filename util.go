@@ -2,12 +2,28 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func get(endpoint string) map[string]interface{} {
+// func get(endpoint string) map[string]interface{} {
+// 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/"+endpoint, nil)
+// 	check(err)
+// 	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+// 	resp, err := http.DefaultClient.Do(req)
+// 	check(err)
+// 	defer resp.Body.Close()
+
+// 	bodyBytes, err := ioutil.ReadAll(resp.Body)
+// 	check(err)
+// 	map2b := make(map[string]interface{})
+// 	json.Unmarshal(bodyBytes, &map2b)
+// 	return map2b
+// }
+
+func get(endpoint string) []byte {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/"+endpoint, nil)
 	check(err)
 	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
@@ -17,10 +33,7 @@ func get(endpoint string) map[string]interface{} {
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	check(err)
-	map2b := make(map[string]interface{})
-	err = json.Unmarshal(bodyBytes, &map2b)
-	check(err)
-	return map2b
+	return bodyBytes
 }
 
 func getToken(body *strings.Reader) {
@@ -39,6 +52,10 @@ func getToken(body *strings.Reader) {
 	err = json.Unmarshal(bodyBytes, &user)
 	check(err)
 
+	writeUser()
+}
+
+func writeUser() {
 	userJSON, err := json.Marshal(user)
 	check(err)
 
@@ -48,6 +65,7 @@ func getToken(body *strings.Reader) {
 
 func check(err error) {
 	if err != nil {
-		panic(err)
+		// panic(err)
+		fmt.Println(err)
 	}
 }

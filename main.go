@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -25,12 +24,7 @@ func main() {
 	if os.IsNotExist(err) {
 		initialize()
 	} else {
-		check(err)
 		err = json.Unmarshal(userRaw, &user)
 		check(err)
 	}
-
-	getPlaylist()
-
-	fmt.Println(user)
 }

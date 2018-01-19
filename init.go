@@ -17,6 +17,7 @@ func initialize() {
 	exec.Command("open", "https://accounts.spotify.com/authorize/?client_id=715c15fc7503401fb136d6a79079b50c&response_type=code&redirect_uri=http://localhost:3456/catch&scope=user-read-playback-state%20playlist-read-private%20playlist-modify-private").Start()
 
 	finished := <-done
+	getPlaylist()
 	if finished {
 		fmt.Println("Initiation complete")
 	}
@@ -35,7 +36,9 @@ func serve(done chan bool) {
 }
 
 func getPlaylist() {
-	list := get("me/playlists")
+	listBytes := get("me/playlists")
+	list := make(map[string]interface{})
+	json.Unmarshal(listBytes, &list)
 	items := list["items"].([]interface{})
 
 	for _, v := range items {
@@ -44,6 +47,7 @@ func getPlaylist() {
 			user.PlaylistID = cell["id"].(string)
 			owner := cell["owner"].(map[string]interface{})
 			user.UserID = owner["id"].(string)
+			writeUser()
 			return
 		}
 	}
@@ -51,7 +55,10 @@ func getPlaylist() {
 }
 
 func createPlaylist() {
-	user.UserID = get("me")["id"].(string)
+	meBytes := get("me")
+	me := make(map[string]interface{})
+	json.Unmarshal(meBytes, &me)
+	user.UserID = me["id"].(string)
 
 	url := "https://api.spotify.com/v1/users/" + user.UserID + "/playlists"
 	body := strings.NewReader(`{"name":"GoSnatch","description":"Your automatically generated GoSnatch playlist!","public":"false"}`)
@@ -70,4 +77,5 @@ func createPlaylist() {
 	err = json.Unmarshal(bodyBytes, &map2b)
 	check(err)
 	user.PlaylistID = map2b["id"].(string)
+	writeUser()
 }
