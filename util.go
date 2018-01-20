@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -15,6 +16,12 @@ func get(endpoint string) []byte {
 	resp, err := http.DefaultClient.Do(req)
 	check(err)
 	defer resp.Body.Close()
+
+	if resp.StatusCode == 401 {
+		getToken(strings.NewReader("grant_type=refresh_token&refresh_token=" + user.RefreshToken))
+		main()
+		os.Exit(0)
+	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	check(err)
