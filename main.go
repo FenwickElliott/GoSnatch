@@ -15,27 +15,13 @@ type userData struct {
 	PlaylistID   string
 }
 
-// type song struct {
-// 	Playing bool `json:"is_playing"`
-// 	item    struct {
-// 		album struct {
-// 			Name string `json:"name"`
-// 		}
-// 	}
-// }
-
 type nowPlaying struct {
 	Item item `json:"item"`
 }
 
 type item struct {
-	Album album  `json:"album"`
-	Name  string `json:"name"`
-	ID    string `json:"id"`
-}
-
-type album struct {
 	Name string `json:"name"`
+	ID   string `json:"id"`
 }
 
 // for Mac, make platform dependant later
@@ -51,13 +37,14 @@ func main() {
 		err = json.Unmarshal(userBytes, &user)
 		check(err)
 	}
-	getSong()
+	song := getSong()
+
+	fmt.Println(song)
 }
 
-func getSong() {
+func getSong() item {
 	var playing nowPlaying
 	songBytes := get("me/player/currently-playing")
-	// fmt.Println(string(songBytes))
 
 	err := json.Unmarshal(songBytes, &playing)
 	check(err)
@@ -66,6 +53,5 @@ func getSong() {
 		fmt.Println("Nothing playing")
 		os.Exit(0)
 	}
-
-	fmt.Println(playing)
+	return playing.Item
 }
