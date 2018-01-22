@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path"
 	"strings"
@@ -41,7 +42,11 @@ func main() {
 	song := getSong()
 
 	isPresant := checkSong(song.ID)
-	fmt.Println(isPresant)
+	if isPresant {
+		fmt.Println(song.Name, "was already present")
+	} else {
+		addSong(song)
+	}
 }
 
 func getSong() item {
@@ -61,4 +66,18 @@ func getSong() item {
 func checkSong(songID string) bool {
 	playlist := get("users/" + user.UserID + "/playlists/" + user.PlaylistID + "/tracks")
 	return strings.Contains(string(playlist), songID)
+}
+
+func addSong(song item) {
+	fmt.Println("Adding")
+	req, err := http.NewRequest("POST", "https://api.spotify.com/v1/users/"+user.UserID+"/playlists/"+user.PlaylistID+"/tracks?uris=spotify%3Atrack%3A"+song.ID, nil)
+	check(err)
+	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+	req.Header.Set("Accept", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	check(err)
+	defer resp.Body.Close()
+	if resp.StatusCode == 201 {
+		fmt.Println(song.Name, "was successfully snatched!")
+	}
 }
