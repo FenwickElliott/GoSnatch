@@ -62,5 +62,10 @@ func getSong() {
 	err := json.Unmarshal(songBytes, &playing)
 	check(err)
 
+	if playing.Item.ID == "" {
+		fmt.Println("Nothing playing")
+		os.Exit(0)
+	}
+
 	fmt.Println(playing)
 }
