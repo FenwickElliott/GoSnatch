@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 )
 
 type userData struct {
@@ -39,7 +40,8 @@ func main() {
 	}
 	song := getSong()
 
-	fmt.Println(song)
+	isPresant := checkSong(song.ID)
+	fmt.Println(isPresant)
 }
 
 func getSong() item {
@@ -54,4 +56,9 @@ func getSong() item {
 		os.Exit(0)
 	}
 	return playing.Item
+}
+
+func checkSong(songID string) bool {
+	playlist := get("users/" + user.UserID + "/playlists/" + user.PlaylistID + "/tracks")
+	return strings.Contains(string(playlist), songID)
 }
