@@ -25,7 +25,7 @@ func initialize() {
 
 func serve(done chan bool) {
 	http.HandleFunc("/catch", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Thank you, GoSnatch can now access your spotify account.\nYou may close this window.\n")
+		io.WriteString(w, "Thank you, snatch can now access your spotify account.\nYou may close this window.\n")
 		code := r.URL.Query()["code"][0]
 
 		getToken(strings.NewReader("grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:3456/catch"))
@@ -43,7 +43,7 @@ func getPlaylist() {
 
 	for _, v := range items {
 		cell := v.(map[string]interface{})
-		if cell["name"] == "GoSnatch" {
+		if cell["name"] == "Snatched" {
 			user.PlaylistID = cell["id"].(string)
 			owner := cell["owner"].(map[string]interface{})
 			user.UserID = owner["id"].(string)
@@ -61,7 +61,7 @@ func createPlaylist() {
 	user.UserID = me["id"].(string)
 
 	url := "https://api.spotify.com/v1/users/" + user.UserID + "/playlists"
-	body := strings.NewReader(`{"name":"GoSnatch","description":"Your automatically generated GoSnatch playlist!","public":"false"}`)
+	body := strings.NewReader(`{"name":"Snatched","description":"Your automatically generated Snatched playlist!","public":"false"}`)
 
 	req, err := http.NewRequest("POST", url, body)
 	check(err)

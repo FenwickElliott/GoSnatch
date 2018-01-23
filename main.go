@@ -27,8 +27,7 @@ type item struct {
 }
 
 // for Mac, make platform dependant later
-// add functionality for creating GoSnatch directory if not presant
-var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "GoSnatch", "userData.json")
+var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "Snatch", "userData.json")
 var user userData
 
 func main() {
