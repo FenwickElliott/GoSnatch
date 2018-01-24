@@ -3,10 +3,10 @@ Snatch is a simple CLI tool for adding the 'now-playing' track on Spotify to a d
 
 
 ### Instillation:
-* go get github.com/fenwickelliott/snatch
+* `go get github.com/fenwickelliott/snatch`
 
 ### Usage:
-* snatch
+* `snatch`
 
 ### Note:
 The first time snatch is run it will open a browser to ask for your permission to access your Spotify account.
