@@ -28,7 +28,7 @@ type item struct {
 	ID   string `json:"id"`
 }
 
-var db = path.Join(appdir.Is(), "snatch")
+var db = appdir.Join("snatch")
 var user userData
 
 func main() {
