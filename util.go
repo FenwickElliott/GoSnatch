@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -48,10 +49,15 @@ func getToken(body *strings.Reader) {
 }
 
 func writeUser() {
+	if _, err := os.Stat(db); os.IsNotExist(err) {
+		err = os.MkdirAll(db, 0764)
+		check(err)
+	}
+
 	userJSON, err := json.Marshal(user)
 	check(err)
 
-	err = ioutil.WriteFile(db, userJSON, 0600)
+	err = ioutil.WriteFile(path.Join(db, "userData.json"), userJSON, 0600)
 	check(err)
 }
 

@@ -8,6 +8,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/fenwickelliott/appdir"
 )
 
 type userData struct {
@@ -26,12 +28,11 @@ type item struct {
 	ID   string `json:"id"`
 }
 
-// for Mac, make platform dependant later
-var db = path.Join(os.Getenv("HOME"), "Library", "Application Support", "Snatch", "userData.json")
+var db = path.Join(appdir.Is(), "snatch")
 var user userData
 
 func main() {
-	userBytes, err := ioutil.ReadFile(db)
+	userBytes, err := ioutil.ReadFile(path.Join(db, "userData.json"))
 	if os.IsNotExist(err) {
 		initialize()
 	} else {
