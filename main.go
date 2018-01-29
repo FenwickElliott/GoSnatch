@@ -9,7 +9,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/fenwickelliott/appdir"
+	// "github.com/fenwickelliott/appdir"
+	"github.com/fenwickelliott/xplat"
 )
 
 type userData struct {
@@ -28,10 +29,12 @@ type item struct {
 	ID   string `json:"id"`
 }
 
-var db = appdir.Join("snatch")
+// var db = appdir.Join("snatch")
+var db, err = xplat.Appdir("snatch")
 var user userData
 
 func main() {
+	check(err)
 	userBytes, err := ioutil.ReadFile(path.Join(db, "userData.json"))
 	if os.IsNotExist(err) {
 		initialize()
