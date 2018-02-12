@@ -21,17 +21,14 @@ type userData struct {
 	PlaylistID   string
 }
 
-type nowPlaying struct {
-	Item item `json:"item"`
+type player struct {
+	IsPlaying bool `json:"is_playing"`
+	Item      item `json:"item"`
 }
 
 type item struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
-}
-
-type player struct {
-	IsPlaying bool `json:"is_playing"`
 }
 
 var db, err = xplat.Appdir("snatch")
@@ -47,37 +44,20 @@ func main() {
 		check(err)
 	}
 
-	playerBytes := get("me/player")
 	var p player
+	playerBytes := get("me/player")
 	err = json.Unmarshal(playerBytes, &p)
 	check(err)
-
 	if !p.IsPlaying {
-		log.Fatal("nothing playing")
+		log.Fatal("Nothing playing")
 	}
 
-	song := getSong()
-
-	isPresant := checkSong(song.ID)
+	isPresant := checkSong(p.Item.ID)
 	if isPresant {
-		fmt.Println(song.Name, "was already present")
+		log.Fatal(p.Item.Name, " was already present")
 	} else {
-		addSong(song)
+		addSong(p.Item)
 	}
-}
-
-func getSong() item {
-	var playing nowPlaying
-	songBytes := get("me/player/currently-playing")
-
-	err := json.Unmarshal(songBytes, &playing)
-	check(err)
-
-	if playing.Item.ID == "" {
-		fmt.Println("Nothing playing")
-		os.Exit(0)
-	}
-	return playing.Item
 }
 
 func checkSong(songID string) bool {
@@ -86,7 +66,6 @@ func checkSong(songID string) bool {
 }
 
 func addSong(song item) {
-	fmt.Println("Adding")
 	req, err := http.NewRequest("POST", "https://api.spotify.com/v1/users/"+user.UserID+"/playlists/"+user.PlaylistID+"/tracks?uris=spotify%3Atrack%3A"+song.ID, nil)
 	check(err)
 	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
