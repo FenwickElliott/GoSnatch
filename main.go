@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -29,7 +30,10 @@ type item struct {
 	ID   string `json:"id"`
 }
 
-// var db = appdir.Join("snatch")
+type player struct {
+	IsPlaying bool `json:"is_playing"`
+}
+
 var db, err = xplat.Appdir("snatch")
 var user userData
 
@@ -42,6 +46,16 @@ func main() {
 		err = json.Unmarshal(userBytes, &user)
 		check(err)
 	}
+
+	playerBytes := get("me/player")
+	var p player
+	err = json.Unmarshal(playerBytes, &p)
+	check(err)
+
+	if !p.IsPlaying {
+		log.Fatal("nothing playing")
+	}
+
 	song := getSong()
 
 	isPresant := checkSong(song.ID)
