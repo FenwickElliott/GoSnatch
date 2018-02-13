@@ -10,7 +10,6 @@ import (
 	"path"
 	"strings"
 
-	// "github.com/fenwickelliott/appdir"
 	"github.com/fenwickelliott/xplat"
 )
 
