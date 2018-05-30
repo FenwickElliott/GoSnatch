@@ -67,7 +67,7 @@ func createPlaylist() {
 
 	req, err := http.NewRequest("POST", url, body)
 	check(err)
-	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+	req.Header.Set("Authorization", "Bearer "+user.AccessBearer)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)

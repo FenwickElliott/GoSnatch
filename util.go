@@ -13,7 +13,7 @@ import (
 func get(endpoint string) []byte {
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/"+endpoint, nil)
 	check(err)
-	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+	req.Header.Set("Authorization", "Bearer "+user.AccessBearer)
 	resp, err := http.DefaultClient.Do(req)
 	if resp == nil {
 		fmt.Println("Internet connection unavailable")

@@ -14,7 +14,7 @@ import (
 )
 
 type userData struct {
-	AcessBearer  string `json:"access_token"`
+	AccessBearer string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	UserID       string
 	PlaylistID   string
@@ -67,7 +67,7 @@ func checkSong(songID string) bool {
 func addSong(song item) {
 	req, err := http.NewRequest("POST", "https://api.spotify.com/v1/users/"+user.UserID+"/playlists/"+user.PlaylistID+"/tracks?uris=spotify%3Atrack%3A"+song.ID, nil)
 	check(err)
-	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
+	req.Header.Set("Authorization", "Bearer "+user.AccessBearer)
 	req.Header.Set("Accept", "application/json")
 	resp, err := http.DefaultClient.Do(req)
 	check(err)
