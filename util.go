@@ -15,6 +15,10 @@ func get(endpoint string) []byte {
 	check(err)
 	req.Header.Set("Authorization", "Bearer "+user.AcessBearer)
 	resp, err := http.DefaultClient.Do(req)
+	if resp == nil {
+		fmt.Println("Internet connection unavailable")
+		os.Exit(0)
+	}
 	check(err)
 	defer resp.Body.Close()
 
