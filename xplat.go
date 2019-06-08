@@ -1,4 +1,13 @@
-package snatch
+package main
+
+import (
+	"errors"
+	"log"
+	"os"
+	"os/exec"
+	"path"
+	"runtime"
+)
 
 //OS is a string denoting runtime.GOOS
 var OS string

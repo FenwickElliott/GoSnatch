@@ -9,8 +9,6 @@ import (
 	"os"
 	"path"
 	"strings"
-
-	"github.com/fenwickelliott/xplat"
 )
 
 type userData struct {

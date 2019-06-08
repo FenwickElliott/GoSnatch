@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-
-	"github.com/fenwickelliott/xplat"
 )
 
 func initialize() {
