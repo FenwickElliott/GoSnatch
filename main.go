@@ -30,7 +30,7 @@ type item struct {
 	ID   string `json:"id"`
 }
 
-var db, err = xplat.Appdir("snatch")
+var db, err = Appdir("snatch")
 var user userData
 
 func main() {

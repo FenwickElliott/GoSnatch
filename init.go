@@ -15,7 +15,7 @@ func initialize() {
 	fmt.Println("Initializing...")
 	done := make(chan bool)
 	go serve(done)
-	err = xplat.Openbrowser("https://accounts.spotify.com/authorize/?client_id=715c15fc7503401fb136d6a79079b50c&response_type=code&redirect_uri=http://localhost:3456/catch&scope=user-read-playback-state%20playlist-read-private%20playlist-modify-private")
+	err = Openbrowser("https://accounts.spotify.com/authorize/?client_id=715c15fc7503401fb136d6a79079b50c&response_type=code&redirect_uri=http://localhost:3456/catch&scope=user-read-playback-state%20playlist-read-private%20playlist-modify-private")
 	check(err)
 
 	finished := <-done
